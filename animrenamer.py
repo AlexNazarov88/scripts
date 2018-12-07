@@ -15,7 +15,7 @@ import sys
 sys.dont_write_bytecode = True
 
 import maya.cmds as cmds
-# import maya.mel as mel
+import maya.mel as mel
 import maya.OpenMaya as OpenMaya
 # import maya.OpenMayaAnim as OpenMayaAnim
 import os
@@ -27,35 +27,69 @@ AMELIA = "amelia_skeleton.2_anims_"
 AMELIA_ITEM = "amelia_items_"
 
 animFileName = ''
-
+currPreset = ''
+textField = ''
+# add variables to hold text strings
 
 def UI():
 
-    if cmds.window( "renamerUI", exists=True ):
-        cmds.showWindow("renamerUI")
-        return
+    # if cmds.window( "renamerUI", exists=True ):
+    #     cmds.showWindow("renamerUI")
+    #     return
     
-    window = cmds.window( "renamerUI", title="animations file renamer", resizeToFitChildren = True, widthHeight=(250, 250))
-    cmds.columnLayout()
-    cmds.optionMenu( label='presets', changeCommand = selectPreset )
-    cmds.menuItem( label='karl' )
-    cmds.menuItem( label='karl_item' )
-    cmds.menuItem( label='amelia' )
-    cmds.menuItem( label='amelia_items' )
-    cmds.textField("newFileName", text = "", changeCommand = onNewFileNameChanged)
+    window = cmds.window( "renamerUI", title="animations file renamer", widthHeight=(100, 150))
+
+    cmds.columnLayout(adjustableColumn=True, columnOffset=("both", 2))
+
+    cmds.separator(style = "none", height = 15)
+    cmds.rowColumnLayout( numberOfColumns=2, columnWidth=[(1, 180), (2, 200)])
+    cmds.optionMenu( label='Preset', changeCommand = selectPreset )
+    cmds.menuItem( label='karl', command = selectPreset)
+    cmds.menuItem( label='karl_item', command = selectPreset )
+    cmds.menuItem( label='amelia', command = selectPreset )
+    cmds.menuItem( label='amelia_items', command = selectPreset )
+    # cmds.separator(style = "none", width = 5)
+    cmds.textField("newFileName", text = textField, changeCommand = onNewFileNameChanged)
     cmds.setParent("..")
 
     cmds.separator(style = "none", height = 15)
+
     cmds.button("OkButton", label = "Ok", command = renameAnimFile)
 
-    cmds.showWindow(window)
+    cmds.showWindow("renamerUI")
+
 
 def selectPreset(arg):
-    animFileName = ''
-    animFileName += arg
+    global currPreset
+    # global KARL
+    # global KARL_ITEM
+    # global AMELIA
+    # global AMELIA_ITEM
 
-def onNewFileNameChanged():
+    currPreset = arg
+    # print currPreset
+    # if currPreset == 'karl':
+    #     onNewFileNameChanged(KARL)
+    # elif currPreset == 'karl_item':
+    #     onNewFileNameChanged(KARL_ITEM)
+    # elif currPreset == 'amelia':
+    #     onNewFileNameChanged(AMELIA)
+    # elif currPreset == 'amelia_items':
+    #     onNewFileNameChanged(AMELIA_ITEM)
+    # else:
+    #     print "Preset not implemented yet" # maybe not needed
+
+
+def onNewFileNameChanged(arg):
+    print "onNewFileNameChanged " + arg
+    global textField
+    textField = arg
+
+
+def renameAnimFile(arg):
+    # currPreset + textField? = animFileName
     dasdasd=''
 
-def renameAnimFile():
-    dasdasd=''
+
+def getFile(arg):
+    ddsadasd=''
