@@ -19,6 +19,7 @@ import maya.mel as mel
 import maya.OpenMaya as OpenMaya
 # import maya.OpenMayaAnim as OpenMayaAnim
 import os
+import glob
 
 # personage file name templates
 KARL = "karl_skeleton.2_anims_"
@@ -26,18 +27,22 @@ KARL_ITEM = "karl_item_"
 AMELIA = "amelia_skeleton.2_anims_"
 AMELIA_ITEM = "amelia_items_"
 
-animFileName = ''
+resultFileName = ''
+fileName = ''
 currPreset = ''
-textField = ''
-# add variables to hold text strings
+animName = ''
 
-def UI():
+
+# добавить еще селектор с выбором файлов в папке (xml)
+# how to get files to rename?
+
+def UI(file):
 
     # if cmds.window( "renamerUI", exists=True ):
     #     cmds.showWindow("renamerUI")
     #     return
     
-    window = cmds.window( "renamerUI", title="animations file renamer", widthHeight=(100, 150))
+    window = cmds.window( "renamerUI", title="animations file renamer", widthHeight=(180, 200))
 
     cmds.columnLayout(adjustableColumn=True, columnOffset=("both", 2))
 
@@ -49,47 +54,55 @@ def UI():
     cmds.menuItem( label='amelia', command = selectPreset )
     cmds.menuItem( label='amelia_items', command = selectPreset )
     # cmds.separator(style = "none", width = 5)
-    cmds.textField("newFileName", text = textField, changeCommand = onNewFileNameChanged)
+    cmds.textField("newFileName", text = animName, changeCommand = onNewFileNameChanged)
     cmds.setParent("..")
 
     cmds.separator(style = "none", height = 15)
 
     cmds.button("OkButton", label = "Ok", command = renameAnimFile)
 
+    # getFile(file)
     cmds.showWindow("renamerUI")
 
 
 def selectPreset(arg):
     global currPreset
+    if arg == 'karl':
+        currPreset = KARL
+    elif arg == 'karl_item':
+        currPreset = KARL_ITEM
+    elif arg == 'amelia':
+        currPreset = AMELIA
+    elif arg == 'amelia_items':
+        currPreset = AMELIA_ITEM
+    print currPreset
+
+
+def onNewFileNameChanged(arg):
+    print "onNewFileNameChanged " + arg
+    global animName
+    animName = arg
+
+
+def renameAnimFile(arg):
+    # currPreset + animName? = animFileName
+    global resultFileName
+    global currPreset
+    global animName
+    global fileName       
     # global KARL
     # global KARL_ITEM
     # global AMELIA
     # global AMELIA_ITEM
 
-    currPreset = arg
-    # print currPreset
-    # if currPreset == 'karl':
-    #     onNewFileNameChanged(KARL)
-    # elif currPreset == 'karl_item':
-    #     onNewFileNameChanged(KARL_ITEM)
-    # elif currPreset == 'amelia':
-    #     onNewFileNameChanged(AMELIA)
-    # elif currPreset == 'amelia_items':
-    #     onNewFileNameChanged(AMELIA_ITEM)
-    # else:
-    #     print "Preset not implemented yet" # maybe not needed
+    resultFileName = currPreset + animName
+    print "Before rename: " + resultFileName
+    os.rename(fileName, resultFileName)
+    print "After rename: " + resultFileName
 
 
-def onNewFileNameChanged(arg):
-    print "onNewFileNameChanged " + arg
-    global textField
-    textField = arg
-
-
-def renameAnimFile(arg):
-    # currPreset + textField? = animFileName
-    dasdasd=''
-
-
-def getFile(arg):
-    ddsadasd=''
+def getFiles(arg):
+    # global fileName
+    # fileName = arg
+    foundFiles = glob.glob("/*.xml") 
+    return foundFiles
