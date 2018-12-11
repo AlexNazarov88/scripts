@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
 Voki Games
@@ -10,7 +11,6 @@ usage:
     
 """
 
-
 import sys
 sys.dont_write_bytecode = True
 
@@ -21,11 +21,17 @@ import maya.OpenMaya as OpenMaya
 import os
 import glob
 
+import fnmatch
+import os
+
+
 # personage file name templates
 KARL = "karl_skeleton.2_anims_"
 KARL_ITEM = "karl_item_"
 AMELIA = "amelia_skeleton.2_anims_"
 AMELIA_ITEM = "amelia_items_"
+
+EXPFILEPATTERN =  r"export(...)[.]xml" # [export](*)[.]xml
 
 resultFileName = ''
 fileName = ''
@@ -36,7 +42,7 @@ animName = ''
 # добавить еще селектор с выбором файлов в папке (xml)
 # how to get files to rename?
 
-def UI(file):
+def UI():
 
     # if cmds.window( "renamerUI", exists=True ):
     #     cmds.showWindow("renamerUI")
@@ -75,7 +81,7 @@ def selectPreset(arg):
         currPreset = AMELIA
     elif arg == 'amelia_items':
         currPreset = AMELIA_ITEM
-    print currPreset
+    print 'currPreset: ' + currPreset
 
 
 def onNewFileNameChanged(arg):
@@ -84,7 +90,7 @@ def onNewFileNameChanged(arg):
     animName = arg
 
 
-def renameAnimFile(arg):
+def renameAnimFile(arg): # need to add file finder
     # currPreset + animName? = animFileName
     global resultFileName
     global currPreset
@@ -95,14 +101,51 @@ def renameAnimFile(arg):
     # global AMELIA
     # global AMELIA_ITEM
 
-    resultFileName = currPreset + animName
+    dirName = os.getcwd() + "/"
+    getFileName()
+
+    resultFileName = dirName + currPreset + animName
+    if not resultFileName.endswith( '.xml' ):
+        resultFileName += '.xml'
+
     print "Before rename: " + resultFileName
     os.rename(fileName, resultFileName)
     print "After rename: " + resultFileName
 
 
-def getFiles(arg):
-    # global fileName
+def getFileName(): # not working
+    global EXPFILEPATTERN
+    global fileName
     # fileName = arg
-    foundFiles = glob.glob("/*.xml") 
-    return foundFiles
+    # need to open first xml file it founds in directory
+    # preferrably, it must start with export .... and end with .xml extention 
+    fileList = glob.glob(os.getcwd() + "/" + EXPFILEPATTERN)
+    print fileList
+
+    for item in fileList:
+        debug = os.path.basename(item)
+        print(os.path.splitext(debug)[0])
+
+        if fnmatch.fnmatch(debug, EXPFILEPATTERN): # possibly comes with abs path
+            print debug
+            fileName = os.getcwd() + "/" + debug
+    # return fileName 
+
+
+
+
+    # fileName = 'export_' + strftime("%d-%m-%Y_%H%M", localtime())
+    # if not fileName.endswith( '.xml' ):
+    #     fileName += '.xml'
+
+    # file = open(fileName, 'w') 
+    # file.close() 
+
+    # OpenMaya.MGlobal.displayInfo('create XML: ' + fileName)
+
+
+
+    #print "create XML: " + fileName
+    
+    #foundFiles = glob.glob("/*.xml") 
+    #return foundFiles
