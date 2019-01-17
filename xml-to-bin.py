@@ -99,7 +99,7 @@ def to_bin_models(modelsList = [], ver = 3):
                 debug = os.path.basename(model)
                 print(os.path.splitext(debug)[0])
                 check_call(['python', '-B', os.path.join('binpy', 'modelxmltobin.py'), '-' + str(ver), model])
-                script.run(['pack_file', model + '.bin'])
+                # script.run(['pack_file', model + '.bin'])
     except Exception:
         print('Failed ' + model)
         sys.exit(1)
