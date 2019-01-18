@@ -9,8 +9,8 @@ C:/Users/*Your User*/Documents/maya/2016/scripts
 .fbx to .ma exporter - save current fbx scene to maya ascii file 
 
 usage:
-	import fbxtoma as exporter
-	exporter.start()
+	import fbxtoma
+	fbxtoma.start()
 
 """
 import sys
