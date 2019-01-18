@@ -1,5 +1,4 @@
 ﻿# Инструменты для конвертации файлов 3D редакторов
-=====
 
 * mayatoxml  
    Скрипт для запуска конвертации 3D файла в xml структуру.  
@@ -15,7 +14,7 @@
 
 * animrenamer  
    **In work**
--------
+
 ### Deprecated
 * all_3dmodels_to_bin.bat / all_3dmodels_to_bin.py - (dir hardcode)
 * run.py - too much hardcode
