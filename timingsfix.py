@@ -9,8 +9,9 @@ How to use in Maya:
 	import timingsfix
 	timingsfix.fixTiming()
 
-to do: need to add junk text strip
 """
+import sys
+sys.dont_write_bytecode = True
 
 import re
 import argparse
@@ -22,10 +23,18 @@ import os
 filePreset = "timing.txt"
 
 def stripString(source):
-	strippedSpaces = re.sub(r'[\t+\v+]', "", source)
+	strippedSpaces = re.sub(r'[\t+\v+]', " ", source)
 	strippedChars = re.sub('-', " ", strippedSpaces)
+	strippedEtc = re.sub(r"(in_out)|(cycle)", " ", strippedChars, flags=re.IGNORECASE) 
+	return strippedEtc
 
-	return strippedChars
+
+def makePreset(source):
+	# to do, add preset parser/writer
+	# matches exactly one (first) time to correct starting frame
+	fixedStartFrames = re.sub(r'1', '0', source, count=1) 
+	return fixedStartFrames
+
 
 def readFile():
 	global filePreset
@@ -52,11 +61,13 @@ def readFile():
 	
 	return fileContents
 
+
 def writeFile(contentsToWrite, filePath = filePreset):
 	file = open(filePath, "w")
 	if file.mode == 'w':
 		file.write(contentsToWrite)
 		file.close()
+
 
 def fixTiming():
 	# function for maya integration
@@ -66,7 +77,8 @@ def fixTiming():
 
 	fileContents = readFile()
 	stringToWrite = stripString(fileContents)
-	writeFile(stringToWrite)
+	matchedToPattern = makePreset(stringToWrite)
+	writeFile(matchedToPattern)
 
 	OpenMaya.MGlobal.displayInfo('Done!')
 
