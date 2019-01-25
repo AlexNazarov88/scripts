@@ -3,7 +3,8 @@ Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
 Voki Games
 
 Script to fix timing text files with a hard coded preset
-	
+v0.2
+
 Needs to be placed in: C:/Users/*YOUR USER*/Documents/maya/2016/scripts
 How to use in Maya:
 	import timingsfix
@@ -25,7 +26,7 @@ filePreset = "timing.txt"
 def stripString(source):
 	strippedSpaces = re.sub(r'[\t+\v+]', " ", source)
 	strippedChars = re.sub('-', " ", strippedSpaces)
-	strippedEtc = re.sub(r"(in_out)|(cycle)", " ", strippedChars, flags=re.IGNORECASE) 
+	strippedEtc = re.sub(r"(in_out)|(cycle)|(IN - OUT)", " ", strippedChars, flags=re.IGNORECASE) 
 	return strippedEtc
 
 
@@ -77,8 +78,8 @@ def fixTiming():
 
 	fileContents = readFile()
 	stringToWrite = stripString(fileContents)
-	matchedToPattern = makePreset(stringToWrite)
-	writeFile(matchedToPattern)
+	# matchedToPattern = makePreset(stringToWrite)
+	writeFile(stringToWrite)
 
 	OpenMaya.MGlobal.displayInfo('Done!')
 
