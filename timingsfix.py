@@ -22,11 +22,13 @@ import os
 #import glob
 
 filePreset = "timing.txt"
+regex = r"(in_out)|(cycle)|(IN - OUT)|(IN-OUT)|(IN)|(out)"
 
 def stripString(source):
+	global regex
 	strippedSpaces = re.sub(r'[\t+\v+]', " ", source)
 	strippedChars = re.sub('-', " ", strippedSpaces)
-	strippedEtc = re.sub(r"(in_out)|(cycle)|(IN - OUT)", " ", strippedChars, flags=re.IGNORECASE) 
+	strippedEtc = re.sub(regex, " ", strippedChars, flags=re.IGNORECASE) 
 	return strippedEtc
 
 
