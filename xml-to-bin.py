@@ -1,14 +1,15 @@
-"""
-Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
-Voki Games
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-maya xml model to bin converter wrapper for convenience
+# Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
+# Voki Games
+# 
+# maya xml model to bin converter wrapper for convenience
+# 
+# usage:
+#     in console, run: 
+#     python xml-to-bin.py *PATH TO FILE*
 
-usage:
-    in console, run: 
-    python xml-to-bin.py *PATH TO FILE*
-
-"""
 import sys
 sys.dont_write_bytecode = True
 
@@ -58,7 +59,7 @@ def bin_factory(folder):
 
 def merge_models(modelsList = []):
     # merges object of similar type into one
-    print "#  Merging models...  #"
+    print("#  Merging models...  #")
     fileNames = []
     for file in modelsList:
         splitted = re.sub(r"[.](.*)[.]xml", '', file)
@@ -76,10 +77,10 @@ def merge_models(modelsList = []):
                 print('MODEL NAME: ' + os.path.splitext(debug)[0])
                 check_call(['python', '-B', os.path.join('binpy', 'merge_models_xml.py'), model])
     except Exception:
-		print('Failed to merge: ' + os.path.basename(model))
-		sys.exit(1)
+        print('Failed to merge: ' + os.path.basename(model))
+        sys.exit(1)
     
-    print '#  These models are already merged:  #'
+    print("#  These models are already merged:  #")
     for model in merged:
         debug = os.path.basename(model)
         print(os.path.splitext(debug)[0])
@@ -88,7 +89,7 @@ def merge_models(modelsList = []):
 def to_bin_models(modelsList = [], ver = 3):
 	# converts xml model to binary
     # currently, the default compression model is set to 3 for all models
-    print "#  Converting models to bin...  #"
+    print("#  Converting models to bin...  #")
     binned = []
     try:
         for model in modelsList:
@@ -104,7 +105,7 @@ def to_bin_models(modelsList = [], ver = 3):
         print('Failed ' + model)
         sys.exit(1)
     
-    print '#  These models are already binned:  #'
+    print("#  These models are already binned:  #")
     for model in binned:
         debug = os.path.basename(model)
         print(os.path.splitext(debug)[0])

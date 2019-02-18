@@ -1,22 +1,23 @@
-"""
-Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
-Voki Games
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-This script needs to be added to:
-C:/Users/*Your User*/Documents/maya/2016/scripts
-usage:
-    select needed bones/transformations/groups
+# Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
+# Voki Games
+# 
+# This script needs to be added to:
+# C:/Users/*Your User*/Documents/maya/2016/scripts
+# usage:
+#     select needed bones/transformations/groups
+# 
+#     run selectively:
+#         import mayatoxml
+#         mayatoxml.factory()
+#     run all:
+#         import mayatoxml
+#         mayatoxml.factory(True)
 
-    run selectively:
-        import mayatoxml
-        mayatoxml.factory()
 
-    run all:
-        import mayatoxml
-        mayatoxml.factory(True)
-"""
-
-
+# need to do proper dir init, dir defaults to maya 2018 docs
 import sys
 sys.dont_write_bytecode = True
 
@@ -38,7 +39,7 @@ defaultAnimFile = "timing.txt"
 #     return projName.lower() # lower() may be needed as project name sometimes comes in capitals 
 
 def getAnimsFile():
-    fileName = os.getcwd() + "/" + defaultAnimFile # may not work in some situations
+    fileName = os.getcwd() + "/" + defaultAnimFile # getcwd() returns default maya 2018 docs
     return fileName
 
 
@@ -47,17 +48,11 @@ def createXML():
     if not fileName.endswith( '.xml' ):
         fileName += '.xml'
 
-    OpenMaya.MGlobal.displayInfo('FileName: ' + fileName)
-
-    try:
-        file = open(fileName)
-    except IOError:
-        # If not exists, create the file
-        file = open(fileName, 'w+')
-
+    file = open(fileName, 'w') 
     file.close() 
 
     OpenMaya.MGlobal.displayInfo('create XML: ' + fileName)
+    #print "create XML: " + fileName
     return fileName 
 
 

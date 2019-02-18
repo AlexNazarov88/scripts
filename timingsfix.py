@@ -1,16 +1,18 @@
-"""
-Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
-Voki Games
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# 
+# Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
+# Voki Games
+# 
+# Script to fix timing text files with a hard coded preset
+# v0.2
+# 
+# Needs to be placed in: C:/Users/*YOUR USER*/Documents/maya/2016/scripts
+# How to use in Maya:
+# 	import timingsfix
+# 	timingsfix.fixTiming()
 
-Script to fix timing text files with a hard coded preset
-v0.2
 
-Needs to be placed in: C:/Users/*YOUR USER*/Documents/maya/2016/scripts
-How to use in Maya:
-	import timingsfix
-	timingsfix.fixTiming()
-
-"""
 import sys
 sys.dont_write_bytecode = True
 
@@ -22,7 +24,7 @@ import os
 #import glob
 
 filePreset = "timing.txt"
-regex = r"(in_out)|(cycle)|(IN - OUT)|(IN-OUT)|(IN)|(out)"
+regex = r"(in_out)|(cycle)|(IN - OUT)|(IN-OUT)|(\bIN\b)|(\bout\b)|(revers)|(start)|(pose)"
 
 def stripString(source):
 	global regex
