@@ -17,7 +17,7 @@
 #         mayatoxml.factory(True)
 
 
-# need to do proper dir init, dir defaults to maya 2018 docs
+# TO DO: need to do proper dir init, dir defaults to maya 2018 docs
 import sys
 sys.dont_write_bytecode = True
 
@@ -31,38 +31,42 @@ import os
 from time import localtime, strftime
 import timingsfix
 
-defaultAnimFile = "timing.txt"
+DEFAULTANIMFILE = "timing.txt"
 
 # def getProjName(): 
 #     # gets the name of maya project file
-#     projName = cmds.workspace(shortName = True) 
 #     return projName.lower() # lower() may be needed as project name sometimes comes in capitals 
+#     projName = cmds.workspace(shortName = True) 
 
 def getAnimsFile():
-    fileName = os.getcwd() + "/" + defaultAnimFile # getcwd() returns default maya 2018 docs
-    return fileName
+    global DEFAULTANIMFILE
+    sceneDir = os.path.dirname(cmds.file(location = True , query = True )) + "/"
+    timingsFile = sceneDir + DEFAULTANIMFILE
+    # fileName = os.getcwd() + "/" + defaultAnimFile # getcwd() returns default maya 2018 docs
+    return timingsFile
 
 
 def createXML(): 
-    fileName = 'export_' + strftime("%d-%m-%Y_%H%M", localtime())
+    sceneDir = os.path.dirname(cmds.file(location = True , query = True )) + "/"
+    fileName = sceneDir + 'export_' + strftime("%d-%m-%Y_%H%M%S", localtime())
     if not fileName.endswith( '.xml' ):
         fileName += '.xml'
 
-    file = open(fileName, 'w') 
+    file = open(fileName, 'w') # replace file creation logic (with...)
     file.close() 
-
     OpenMaya.MGlobal.displayInfo('create XML: ' + fileName)
-    #print "create XML: " + fileName
     return fileName 
 
 
 def setXMLFile(filePath): 
     xporter.onXMLFileAddressChanged(filePath)
 
+
 def setAnimFile(filePath): 
     xporter.onAnimationsFileAddressChanged(filePath)
     # needed because it`s not getting triggered with onAnimationsFileAddressChanged()
     xporter.loadAnimationsFromFile() 
+
 
 def runSelectiveExport(): 
     # need to add error handling - try except
@@ -70,7 +74,7 @@ def runSelectiveExport():
     xporter.doExport(False) 
 
 
-def runAllExport(): # test
+def runAllExport(): 
     # need to add error handling - try except
     OpenMaya.MGlobal.displayInfo('Starting export everything...')
     xporter.doExport(True) 
