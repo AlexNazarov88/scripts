@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 
+
 # Author: Oleksandr Nazarov - aleksandr.nazarov@vokigames.com
 # Voki Games
 # 
 # Script to fix timing text files with a hard coded preset
-# v0.2
+# v0.3
 # 
 # Needs to be placed in: C:/Users/*YOUR USER*/Documents/maya/2016/scripts
 # How to use in Maya:
 # 	import timingsfix
 # 	timingsfix.fixTiming()
 
+# to do: add exceptions
 
 import sys
 sys.dont_write_bytecode = True
@@ -23,14 +24,21 @@ import maya.cmds as cmds
 import os
 #import glob
 
-filePreset = "timing.txt"
-regex = r"(in_out)|(cycle)|(IN - OUT)|(IN-OUT)|(\bIN\b)|(\bout\b)|(revers)|(start)|(pose)"
+FILEPRESET = "timing.txt"
+regex = r"(in_out)|(cycle)|(IN - OUT)|(IN-OUT)|(\bIN\b)|(\bout\b)|(revers)|(start)|(pose)|([-])"
+
+
+def getProjDir():
+	projDir = os.path.dirname(cmds.file(location = True , query = True )) + "/"
+	return projDir
+
 
 def stripString(source):
 	global regex
+	OpenMaya.MGlobal.displayInfo('Clearing timings... ')
 	strippedSpaces = re.sub(r'[\t+\v+]', " ", source)
-	strippedChars = re.sub('-', " ", strippedSpaces)
-	strippedEtc = re.sub(regex, " ", strippedChars, flags=re.IGNORECASE) 
+	# strippedChars = re.sub(r'[-]', " ", strippedSpaces)
+	strippedEtc = re.sub(regex, " ", strippedSpaces, flags=re.IGNORECASE) 
 	return strippedEtc
 
 
@@ -42,10 +50,17 @@ def makePreset(source):
 
 
 def readFile():
-	global filePreset
-
+	global FILEPRESET
+	timingsFile = getProjDir() + FILEPRESET
+	fileContents = ""
+	file = open(timingsFile, "r")
+	if file.mode == 'r':
+		fileContents = file.read()
+		OpenMaya.MGlobal.displayInfo('Reading... ')
+		OpenMaya.MGlobal.displayInfo(fileContents)
+		file.close()
+	return fileContents
 	# to do: add check for other txt files containing timings
-	 
 	# elif not filePath == filePreset:
 	# 	print 'Default file name not found, looking for other files...'
 	# 	timingsFile = glob.glob('*.txt')
@@ -53,23 +68,15 @@ def readFile():
 	# 		raise RuntimeError, 'No .txt files found.'
 	# 	elif not timingsFile.endswith('.txt'):
 	# 		raise RuntimeError, 'Wrong extension, txt file expexted.'
-	
-	sceneDir = os.path.dirname(cmds.file(location = True , query = True )) + "/"
-	timingsFile = sceneDir + filePreset
-	print timingsFile
-
-	fileContents = ""
-	file = open(timingsFile, "r")
-	if file.mode == 'r':
-		fileContents = file.read()
-		file.close()
-	
-	return fileContents
 
 
-def writeFile(contentsToWrite, filePath = filePreset):
-	file = open(filePath, "w")
+def writeFile(contentsToWrite): 
+	global FILEPRESET
+	fileName = getProjDir() + FILEPRESET
+	file = open(fileName, "w")
 	if file.mode == 'w':
+		OpenMaya.MGlobal.displayInfo('Writing... ')
+		OpenMaya.MGlobal.displayInfo(contentsToWrite)
 		file.write(contentsToWrite)
 		file.close()
 
@@ -77,14 +84,11 @@ def writeFile(contentsToWrite, filePath = filePreset):
 def fixTiming():
 	# function for maya integration
 	fileContents = ""
-
 	OpenMaya.MGlobal.displayInfo('Fixing timings file...')
-
 	fileContents = readFile()
 	stringToWrite = stripString(fileContents)
 	# matchedToPattern = makePreset(stringToWrite)
 	writeFile(stringToWrite)
-
 	OpenMaya.MGlobal.displayInfo('Done!')
 
 
