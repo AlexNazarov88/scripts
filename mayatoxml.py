@@ -5,9 +5,10 @@
 # Voki Games
 # 
 # This script needs to be added to:
-# C:/Users/*Your User*/Documents/maya/2016/scripts
+# C:/Users/*Your User*/Documents/maya/2018/scripts
 # usage:
-#     select needed bones/transformations/groups
+# 
+#     In Maya, select needed bones/transformations/groups and run in script editor
 # 
 #     run selectively:
 #         import mayatoxml
@@ -17,7 +18,7 @@
 #         mayatoxml.factory(True)
 
 
-# TO DO: need to do proper dir init, dir defaults to maya 2018 docs
+
 import sys
 sys.dont_write_bytecode = True
 
@@ -82,18 +83,18 @@ def runAllExport():
 
 def factory(all = False):
     # main function
-    xmlFile = ''
-    animFile = ''
+    OpenMaya.MGlobal.displayInfo('Running Maya to XML export script')
+    OpenMaya.MGlobal.displayInfo('Preparing export...')
     
+    xmlFile = ''
     xmlFile = createXML()
     setXMLFile(xmlFile)
-    
     # to do: improve animation timings file check up
     timingsfix.fixTiming()
+
+    animFile = ''
     animFile = getAnimsFile()
     setAnimFile(animFile)
-    #
-
     # run exporting process
     if all:
         runAllExport()
