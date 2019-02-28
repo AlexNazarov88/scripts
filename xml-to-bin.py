@@ -12,7 +12,6 @@
 
 import sys
 sys.dont_write_bytecode = True
-
 import os
 sys.path.insert(1, os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'utils', 'resbuilder'))
 import script
@@ -20,7 +19,6 @@ import fnmatch
 import glob
 import re
 import argparse
-
 from subprocess import check_call
 
 # commented because ver3 is used by default now
@@ -42,17 +40,12 @@ from subprocess import check_call
 # 		'tabletpc.xml', 'trubka.xml', 'kost.xml', 'leyka.xml']
 
 def bin_factory(folder):
-
-    # to do: add method to process single file inputs
-
     toMerge = getMergeList(folder)
     if toMerge:
         merge_models(toMerge)
-    
     toBin = getToBinList(folder, toMerge)
     if toBin:
         to_bin_models(toBin)
-
     # wait for escape
     script.pause()
 
@@ -118,10 +111,8 @@ def getMergeList(folder):
 
 def getToBinList(folder, skip = []):
     foundFiles = glob.glob(folder + "/*.xml") 
-    
     for file in skip:
         foundFiles.remove(file)
-
     ToBinList = []
     for file in foundFiles:
         ToBinList.append(file)  
@@ -132,4 +123,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("dirPath", help = "directory path to parse and binarize xml files")
     args = parser.parse_args()
+    try:
+        if not os.path.isdir(args.dirPath):
+            raise Exception
+    except Exception:
+        print("#  This folder does not exist.  #")
+        sys.exit(1)
     bin_factory(args.dirPath)
