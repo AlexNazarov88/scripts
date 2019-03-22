@@ -44,7 +44,7 @@ def getAnimsFile():
         if not os.path.exists(timingsFile):
             raise Exception
     except Exception:
-        OpenMaya.MGlobal.displayError('Timings file does not exist.' + Exception.message)
+        OpenMaya.MGlobal.displayError('Timings file does not exist.' + str(Exception.message))
     return timingsFile
 
 
